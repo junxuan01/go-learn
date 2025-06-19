@@ -23,5 +23,20 @@ func main() {
 	var str4 = "Hello,World,Go"
 	parts := strings.Split(str4, ",")
 	fmt.Println("str4分割后的结果:", parts) // 输出：str4分割后的结果: [Hello World Go] 相当于js中的	// str4.split(",")
-	//
+	// 字符串修改
+	str5 := "Hello, World!"
+	str5 = strings.ReplaceAll(str5, "World", "Go") // 替换
+	fmt.Println("str5修改后的结果:", str5)               // 输出：str5修改后的
+
+	s2 := "白萝卜"
+	s3 := []rune(s2)                     // 将字符串转换为rune切片
+	s3[0] = '红'                          // 修改第一个字符
+	fmt.Println("s2修改后的结果:", string(s3)) // 输出：s2修改后的结果: 红萝卜
+
+	c1 := "H"
+	c2 := 'H'                                    // 字符串和字符的区别
+	fmt.Println("c1的类型:", fmt.Sprintf("%T", c1)) // 输出：c1的类型: string
+	fmt.Println("c2的类型:", fmt.Sprintf("%T", c2)) // 输出：c2的类型: int32
+	fmt.Println("c1和c2是否相等:", c1 == string(c2))  // 输出：c1和c2是否相等: true
+
 }
