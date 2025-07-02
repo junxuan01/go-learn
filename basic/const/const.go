@@ -26,6 +26,7 @@ const (
 	a2
 	a3
 )
+
 const (
 	b1 = iota
 	b2 = iota
