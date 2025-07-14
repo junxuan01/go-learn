@@ -72,68 +72,25 @@ func main() {
 	fmt.Printf("  slice3: %v\n", slice3)
 	fmt.Printf("  slice4: %v\n", slice4) // slice4[0]也变了！
 
-	// 5. 切片扩容时的底层数组变化
-	fmt.Println("\n切片扩容时底层数组的变化:")
-	smallSlice := []int{1, 2}
-	fmt.Printf("扩容前 - 切片: %v, 容量: %d, 地址: %p\n",
-		smallSlice, cap(smallSlice), &smallSlice[0])
+	// 5. 切片扩容时的底层数组变化 append
+	slice5 := []string{"北京", "上海", "广州"}
+	// slice5[3] = "深圳" // 直接访问索引会报错，因为切片长度不够
+	fmt.Println("\n扩容前的slice5:", slice5)
+	slice5 = append(slice5, "深圳") // 使用append添加元素
+	fmt.Println("\n扩容后的slice5:", slice5)
+	slice5 = append(slice5, "深圳", "杭州", "成都") // 再次扩容
+	fmt.Println("\n再次扩容后的slice5:", slice5)
 
-	smallSlice = append(smallSlice, 3, 4, 5) // 触发扩容
-	fmt.Printf("扩容后 - 切片: %v, 容量: %d, 地址: %p\n",
-		smallSlice, cap(smallSlice), &smallSlice[0]) // 地址变了！
+	// copy示例
+	fmt.Println("\n=== copy函数示例 ===")
+	slice6 := []int{1, 2, 3, 4}
+	slice7 := slice6
+	slice8 := make([]int, 4) // 创建一个新的切片，长度为4
+	copy(slice8, slice6)
+	slice6[0] = 100                // 修改slice6的第一个元素
+	fmt.Println("slice6:", slice6) // [100 2 3 4]
+	fmt.Println("slice7:", slice7) // [100 2 3 4] - slice7共享slice6的底层数组
+	fmt.Println("slice8:", slice8) // [1 2 3 4]
+	// slice8是slice6的副本，修改slice6不会影响slice8
 
-	// 6. 使用make创建切片的底层数组
-	fmt.Println("\n使用make创建切片:")
-	madeSlice := make([]int, 3, 5) // 长度3，容量5
-	fmt.Printf("make切片: %v, 长度: %d, 容量: %d\n", madeSlice, len(madeSlice), cap(madeSlice))
-	fmt.Printf("底层数组地址: %p\n", &madeSlice[0])
-
-	// 填充数据
-	for i := 0; i < len(madeSlice); i++ {
-		madeSlice[i] = i + 1
-	}
-	fmt.Printf("填充后: %v\n", madeSlice)
-
-	// 添加元素但不超过容量
-	madeSlice = append(madeSlice, 4, 5)
-	fmt.Printf("添加元素后: %v, 长度: %d, 容量: %d, 地址: %p\n",
-		madeSlice, len(madeSlice), cap(madeSlice), &madeSlice[0]) // 地址不变
-
-	// 7. 底层数组的内存布局演示
-	demonstrateMemoryLayout()
-}
-
-// 演示底层数组的内存布局
-func demonstrateMemoryLayout() {
-	fmt.Println("\n=== 底层数组内存布局演示 ===")
-
-	// 创建一个数组
-	arr := [6]int{10, 20, 30, 40, 50, 60}
-	fmt.Printf("数组: %v\n", arr)
-
-	// 创建不同的切片，都指向同一个底层数组
-	slice1 := arr[1:4] // [20, 30, 40]
-	slice2 := arr[2:5] // [30, 40, 50]
-	slice3 := arr[0:6] // 整个数组
-
-	fmt.Printf("slice1 [1:4]: %v, 长度: %d, 容量: %d\n", slice1, len(slice1), cap(slice1))
-	fmt.Printf("slice2 [2:5]: %v, 长度: %d, 容量: %d\n", slice2, len(slice2), cap(slice2))
-	fmt.Printf("slice3 [0:6]: %v, 长度: %d, 容量: %d\n", slice3, len(slice3), cap(slice3))
-
-	// 显示内存地址
-	fmt.Println("\n内存地址分析:")
-	for i := 0; i < len(arr); i++ {
-		fmt.Printf("arr[%d] = %d, 地址: %p\n", i, arr[i], &arr[i])
-	}
-
-	fmt.Printf("\nslice1首元素地址: %p (指向arr[1])\n", &slice1[0])
-	fmt.Printf("slice2首元素地址: %p (指向arr[2])\n", &slice2[0])
-	fmt.Printf("slice3首元素地址: %p (指向arr[0])\n", &slice3[0])
-
-	// 修改演示
-	fmt.Println("\n修改slice1[1] = 999:")
-	slice1[1] = 999 // 实际修改的是arr[2]
-	fmt.Printf("arr: %v\n", arr)
-	fmt.Printf("slice1: %v\n", slice1)
-	fmt.Printf("slice2: %v (slice2[0]也变了!)\n", slice2)
 }
