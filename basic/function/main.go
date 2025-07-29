@@ -6,6 +6,17 @@ func sum(a int, b int) int {
 	return a + b
 }
 
+// 闭包
+func closureExample() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
+// 匿名函数
+
 // 没有返回值的函数
 func printHello() {
 	println("Hello, World!")
