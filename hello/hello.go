@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"example.com/greetings"
+	// 引入 greetings 包
 )
 
 func main() {
