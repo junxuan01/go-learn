@@ -1,32 +1,39 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
-type person struct {
-	name  string
-	age   int
-	hobby []string
+type Person struct {
+	Name    string   `json:"name"`
+	Age     int      `json:"age"`
+	Hobby   []string `json:"hobby"`
+	Address Address  `json:"address"`
+}
+type Address struct {
+	City     string `json:"city"`
+	PostCode string `json:"postcode"`
 }
 
-func f2(x *person) {
-	x.name = "李四"
+func (address *Address) CallAddress() {
+	fmt.Println("your address and postcode is:", address.City, address.PostCode)
+}
+
+var p1 = &Person{
+	Name:  "Alice",
+	Age:   30,
+	Hobby: []string{"Reading", "Traveling"},
+	Address: Address{
+		City:     "New York",
+		PostCode: "10001",
+	},
 }
 
 func main() {
-	// var p person
-	// var p1 = new(person)
-	// p1.name = "王五"
-	// fmt.Printf("%p\n", p1)
-	// p.name = "张三"
-	// p.age = 25
-	// p.hobby = []string{"读书", "旅行", "编程"}
-	// fmt.Println("p", p)
-	// f2(&p)
-	// fmt.Println("修改后的p", p)
-
-	// 定义一个int类型的变量a，并输出其地址
-	var a int = 10
-	var b = &a
-	fmt.Printf("%p\n", &a)
-	fmt.Printf("%v\n", *b)
+	fmt.Println("结构体的基本使用")
+	fmt.Printf("Person p1: %+v\n", p1.Address.City)
+	p1.Address.CallAddress()
+	b, _ := json.Marshal(p1)
+	fmt.Println("JSON representation of p1:", string(b))
 }

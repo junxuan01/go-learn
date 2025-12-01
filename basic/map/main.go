@@ -13,9 +13,10 @@ func main() {
 	m["apple"] = 5                   // 添加键值对
 	m["banana"] = 3                  // 添加另一个键值对
 	m["orange"] = 8                  // 再添加一个键值对
-	fmt.Println("map的值", m)          // 输出map的长度
-	fmt.Printf("map的内容:%v\n", m)     // 输出map的内容
-	for k, v := range m {            // 遍历map
+	fmt.Println("获取一个不存在的Key", m["not"])
+	fmt.Println("map的值", m)      // 输出map的长度
+	fmt.Printf("map的内容:%v\n", m) // 输出map的内容
+	for k, v := range m {        // 遍历map
 		println("键:", k, "值:", v) // 输出每个键值pair
 	}
 	delete(m, "banana")          // 删除键为"banana"的键值对

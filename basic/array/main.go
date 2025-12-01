@@ -3,6 +3,9 @@ package main
 import "fmt"
 
 func main() {
+	var langArray = [...]int{1: 10, 3: 30}
+	fmt.Println("数组langArray内容:", langArray)
+
 	var arrDemo = [5]int{1, 3, 5, 7, 8}
 	var sum = 0
 	// for i := 0; i < len(arrDemo); i++ {
