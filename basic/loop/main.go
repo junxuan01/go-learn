@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 
 	// 二维数组
-	matrix := [3][...]string{
+	matrix := [3][2]string{
 		{"beijing", "shanghai"},
 		{"guangzhou", "shenzhen"},
 		{"hangzhou", "nanjing"},

@@ -1,39 +1,19 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
 type Person struct {
-	Name    string   `json:"name"`
-	Age     int      `json:"age"`
-	Hobby   []string `json:"hobby"`
-	Address Address  `json:"address"`
-}
-type Address struct {
-	City     string `json:"city"`
-	PostCode string `json:"postcode"`
-}
-
-func (address *Address) CallAddress() {
-	fmt.Println("your address and postcode is:", address.City, address.PostCode)
-}
-
-var p1 = &Person{
-	Name:  "Alice",
-	Age:   30,
-	Hobby: []string{"Reading", "Traveling"},
-	Address: Address{
-		City:     "New York",
-		PostCode: "10001",
-	},
+	name string
+	age  int
 }
 
 func main() {
-	fmt.Println("结构体的基本使用")
-	fmt.Printf("Person p1: %+v\n", p1.Address.City)
-	p1.Address.CallAddress()
-	b, _ := json.Marshal(p1)
-	fmt.Println("JSON representation of p1:", string(b))
+	var p = &Person{name: "张三3", age: 17}
+	fmt.Printf("%p\n", p)
+	var p1 = Person{name: "张三", age: 18}
+	fmt.Printf("%#v\n", p1)
+	var p2 = &Person{name: "李四", age: 20}
+	fmt.Printf("%#v\n", p2)
 }
