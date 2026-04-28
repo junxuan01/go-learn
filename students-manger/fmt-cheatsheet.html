@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Go fmt &#x683c;&#x5f0f;&#x5316;&#x901f;&#x67e5;&#x8868;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="go-fmt-格式化速查表">Go fmt 格式化速查表</h1>
+<p>先记住一个总原则：</p>
+<p>格式化字符串里，普通字符原样输出，只有从 <code>%</code> 开始的部分才是“格式说明”。</p>
+<p>比如：</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;name=%s age=%d\n&quot;</span>, <span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)
+</code></pre>
+<p>这里：</p>
+<ul>
+<li><code>name=</code> 和 <code> age=</code> 是普通文本</li>
+<li><code>%s</code> 和 <code>%d</code> 是格式符</li>
+<li><code>\n</code> 是换行</li>
+</ul>
+<p>你可以把它理解成“模板 + 填空”。</p>
+<h2 id="一最常用格式符">一、最常用格式符</h2>
+<h3 id="1-d">1. <code>%d</code></h3>
+<p>表示十进制整数。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%d\n&quot;</span>, <span class="hljs-number">18</span>)   <span class="hljs-comment">// 18</span>
+</code></pre>
+<h3 id="2-s">2. <code>%s</code></h3>
+<p>表示字符串。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%s\n&quot;</span>, <span class="hljs-string">&quot;hello&quot;</span>)   <span class="hljs-comment">// hello</span>
+</code></pre>
+<h3 id="3-f">3. <code>%f</code></h3>
+<p>表示浮点数，默认会保留 6 位小数。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%f\n&quot;</span>, <span class="hljs-number">3.14</span>)   <span class="hljs-comment">// 3.140000</span>
+</code></pre>
+<h3 id="4-2f">4. <code>%.2f</code></h3>
+<p>表示浮点数，保留 2 位小数。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%.2f\n&quot;</span>, <span class="hljs-number">3.14159</span>)   <span class="hljs-comment">// 3.14</span>
+</code></pre>
+<h3 id="5-v">5. <code>%v</code></h3>
+<p>通用格式，最常用，打印“值”。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, <span class="hljs-number">123</span>)          <span class="hljs-comment">// 123</span>
+fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, <span class="hljs-string">&quot;hello&quot;</span>)      <span class="hljs-comment">// hello</span>
+fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, []<span class="hljs-type">int</span>{<span class="hljs-number">1</span>, <span class="hljs-number">2</span>})   <span class="hljs-comment">// [1 2]</span>
+</code></pre>
+<h3 id="6-v">6. <code>%#v</code></h3>
+<p>打印更完整、更接近 Go 代码的值，调试结构体时特别常用。</p>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> student <span class="hljs-keyword">struct</span> {
+	ID   <span class="hljs-type">int</span>
+	Name <span class="hljs-type">string</span>
+}
+
+s := student{ID: <span class="hljs-number">1</span>, Name: <span class="hljs-string">&quot;tom&quot;</span>}
+
+fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, s)   <span class="hljs-comment">// {1 tom}</span>
+fmt.Printf(<span class="hljs-string">&quot;%#v\n&quot;</span>, s)  <span class="hljs-comment">// main.student{ID:1, Name:&quot;tom&quot;}</span>
+</code></pre>
+<h3 id="7-t">7. <code>%T</code></h3>
+<p>打印变量的类型。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>, <span class="hljs-number">123</span>)       <span class="hljs-comment">// int</span>
+fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>, <span class="hljs-string">&quot;hello&quot;</span>)   <span class="hljs-comment">// string</span>
+</code></pre>
+<h3 id="8-t">8. <code>%t</code></h3>
+<p>打印布尔值。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%t\n&quot;</span>, <span class="hljs-literal">true</span>)   <span class="hljs-comment">// true</span>
+</code></pre>
+<h2 id="二宽度和补位">二、宽度和补位</h2>
+<p>这部分最容易混，但规律很固定。</p>
+<p>看这个：</p>
+<pre><code class="language-go">%<span class="hljs-number">02</span>d
+</code></pre>
+<p>拆开理解：</p>
+<ul>
+<li><code>%</code>：开始格式说明</li>
+<li><code>0</code>：不够宽度时用 <code>0</code> 补</li>
+<li><code>2</code>：总宽度至少 2 位</li>
+<li><code>d</code>：按十进制整数输出</li>
+</ul>
+<p>所以：</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%02d\n&quot;</span>, <span class="hljs-number">1</span>)   <span class="hljs-comment">// 01</span>
+fmt.Printf(<span class="hljs-string">&quot;%02d\n&quot;</span>, <span class="hljs-number">9</span>)   <span class="hljs-comment">// 09</span>
+fmt.Printf(<span class="hljs-string">&quot;%02d\n&quot;</span>, <span class="hljs-number">10</span>)  <span class="hljs-comment">// 10</span>
+</code></pre>
+<p>这就是代码里 <code>stu%02d</code> 的意思：</p>
+<pre><code class="language-go">fmt.Sprintf(<span class="hljs-string">&quot;stu%02d&quot;</span>, <span class="hljs-number">3</span>)   <span class="hljs-comment">// stu03</span>
+</code></pre>
+<p>再看几个变化：</p>
+<h3 id="1-2d">1. <code>%2d</code></h3>
+<p>宽度至少 2 位，不够时前面补空格。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%2d\n&quot;</span>, <span class="hljs-number">1</span>)   <span class="hljs-comment">//  1</span>
+fmt.Printf(<span class="hljs-string">&quot;%2d\n&quot;</span>, <span class="hljs-number">10</span>)  <span class="hljs-comment">// 10</span>
+</code></pre>
+<h3 id="2-03d">2. <code>%03d</code></h3>
+<p>宽度至少 3 位，不够时前面补 0。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%03d\n&quot;</span>, <span class="hljs-number">1</span>)   <span class="hljs-comment">// 001</span>
+fmt.Printf(<span class="hljs-string">&quot;%03d\n&quot;</span>, <span class="hljs-number">12</span>)  <span class="hljs-comment">// 012</span>
+</code></pre>
+<h3 id="3--5s">3. <code>%-5s</code></h3>
+<p>字符串宽度至少 5 位，左对齐，右边补空格。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%-5s!\n&quot;</span>, <span class="hljs-string">&quot;go&quot;</span>)   <span class="hljs-comment">// go   !</span>
+</code></pre>
+<h3 id="4-5s">4. <code>%5s</code></h3>
+<p>字符串宽度至少 5 位，默认右对齐，左边补空格。</p>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;%5s!\n&quot;</span>, <span class="hljs-string">&quot;go&quot;</span>)   <span class="hljs-comment">//    go!</span>
+</code></pre>
+<h2 id="三printlnprintfsprintffprintf-的区别">三、Println、Printf、Sprintf、Fprintf 的区别</h2>
+<p>抓住“输出到哪里”就行。</p>
+<h3 id="1-fmtprintln">1. <code>fmt.Println</code></h3>
+<p>直接打印到终端。</p>
+<ul>
+<li>参数之间自动加空格</li>
+<li>结尾自动换行</li>
+<li>不需要格式符</li>
+</ul>
+<pre><code class="language-go">fmt.Println(<span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)   <span class="hljs-comment">// tom 18</span>
+</code></pre>
+<h3 id="2-fmtprintf">2. <code>fmt.Printf</code></h3>
+<p>打印到终端，但需要你自己写格式模板。</p>
+<ul>
+<li>不会自动换行，通常自己加 <code>\n</code></li>
+</ul>
+<pre><code class="language-go">fmt.Printf(<span class="hljs-string">&quot;name=%s age=%d\n&quot;</span>, <span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)
+</code></pre>
+<h3 id="3-fmtsprintf">3. <code>fmt.Sprintf</code></h3>
+<p>不打印，只返回格式化后的字符串。</p>
+<pre><code class="language-go">s := fmt.Sprintf(<span class="hljs-string">&quot;name=%s age=%d&quot;</span>, <span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)
+<span class="hljs-comment">// s == &quot;name=tom age=18&quot;</span>
+</code></pre>
+<p>适合：</p>
+<ul>
+<li>拼接字符串</li>
+<li>生成日志内容</li>
+<li>生成编号、用户名、文件名</li>
+</ul>
+<h3 id="4-fmtfprintln">4. <code>fmt.Fprintln</code></h3>
+<p>写到指定目标，不一定是终端。</p>
+<p>常见目标：</p>
+<ul>
+<li>文件</li>
+<li>HTTP 响应</li>
+<li>buffer</li>
+</ul>
+<pre><code class="language-go">fmt.Fprintln(w, <span class="hljs-string">&quot;Hello&quot;</span>)
+</code></pre>
+<p>这里是写到 <code>w</code>，不是写到终端。</p>
+<h3 id="5-fmtfprintf">5. <code>fmt.Fprintf</code></h3>
+<p>和 <code>Fprintln</code> 类似，但支持格式化模板。</p>
+<pre><code class="language-go">fmt.Fprintf(w, <span class="hljs-string">&quot;name=%s age=%d&quot;</span>, <span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)
+</code></pre>
+<p>你可以这么记：</p>
+<ul>
+<li><code>Println</code>：直接打印</li>
+<li><code>Printf</code>：按格式打印</li>
+<li><code>Sprintf</code>：按格式生成字符串</li>
+<li><code>Fprintf</code>：按格式写到某个目标</li>
+</ul>
+<h2 id="四当前代码里的逻辑">四、当前代码里的逻辑</h2>
+<p>这句：</p>
+<pre><code class="language-go">student := newStudent(i+<span class="hljs-number">1</span>, fmt.Sprintf(<span class="hljs-string">&quot;stu%02d&quot;</span>, i+<span class="hljs-number">1</span>))
+</code></pre>
+<p>可以拆成：</p>
+<pre><code class="language-go">id := i + <span class="hljs-number">1</span>
+name := fmt.Sprintf(<span class="hljs-string">&quot;stu%02d&quot;</span>, id)
+student := newStudent(id, name)
+</code></pre>
+<p>比如当 <code>i = 0</code> 时：</p>
+<pre><code class="language-go">id := <span class="hljs-number">1</span>
+name := <span class="hljs-string">&quot;stu01&quot;</span>
+student := newStudent(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;stu01&quot;</span>)
+</code></pre>
+<p>所以 <code>Sprintf</code> 在这里不是为了打印，而是为了“生成名字字符串”。</p>
+<h2 id="五一张速记表">五、一张速记表</h2>
+<table>
+<thead>
+<tr>
+<th>格式符</th>
+<th>含义</th>
+<th>示例</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>%d</code></td>
+<td>十进制整数</td>
+<td><code>fmt.Sprintf(&quot;%d&quot;, 18)</code></td>
+<td><code>18</code></td>
+</tr>
+<tr>
+<td><code>%02d</code></td>
+<td>至少 2 位，不够补 0</td>
+<td><code>fmt.Sprintf(&quot;%02d&quot;, 3)</code></td>
+<td><code>03</code></td>
+</tr>
+<tr>
+<td><code>%s</code></td>
+<td>字符串</td>
+<td><code>fmt.Sprintf(&quot;%s&quot;, &quot;go&quot;)</code></td>
+<td><code>go</code></td>
+</tr>
+<tr>
+<td><code>%v</code></td>
+<td>通用值</td>
+<td><code>fmt.Sprintf(&quot;%v&quot;, []int{1,2})</code></td>
+<td><code>[1 2]</code></td>
+</tr>
+<tr>
+<td><code>%#v</code></td>
+<td>更完整的 Go 形式</td>
+<td><code>fmt.Sprintf(&quot;%#v&quot;, s)</code></td>
+<td><code>main.student{...}</code></td>
+</tr>
+<tr>
+<td><code>%T</code></td>
+<td>类型</td>
+<td><code>fmt.Sprintf(&quot;%T&quot;, 3)</code></td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>%f</code></td>
+<td>浮点数</td>
+<td><code>fmt.Sprintf(&quot;%f&quot;, 3.14)</code></td>
+<td><code>3.140000</code></td>
+</tr>
+<tr>
+<td><code>%.2f</code></td>
+<td>保留 2 位小数</td>
+<td><code>fmt.Sprintf(&quot;%.2f&quot;, 3.14159)</code></td>
+<td><code>3.14</code></td>
+</tr>
+<tr>
+<td><code>%t</code></td>
+<td>布尔值</td>
+<td><code>fmt.Sprintf(&quot;%t&quot;, true)</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="六推荐记忆方式">六、推荐记忆方式</h2>
+<p>不用一次记太多，先只记这 6 个：</p>
+<ul>
+<li><code>%d</code></li>
+<li><code>%s</code></li>
+<li><code>%v</code></li>
+<li><code>%#v</code></li>
+<li><code>%T</code></li>
+<li><code>%.2f</code></li>
+</ul>
+<p>再额外单独记一个规则：</p>
+<ul>
+<li><code>%02d</code> = 整数至少 2 位，不够前面补 0</li>
+</ul>
+<p>这个规则对编号场景最常见，比如：</p>
+<ul>
+<li><code>stu01</code></li>
+<li><code>order0001</code></li>
+<li><code>page03</code></li>
+</ul>
+<h2 id="七一个判断口诀">七、一个判断口诀</h2>
+<p>当你不确定该用哪个函数时，就问自己一句：</p>
+<p>“我是要直接输出，还是要先拿到字符串？”</p>
+<ul>
+<li>直接输出：<code>Println</code> / <code>Printf</code></li>
+<li>想先得到字符串：<code>Sprintf</code></li>
+<li>想写到文件、响应、buffer：<code>Fprintf</code> / <code>Fprintln</code></li>
+</ul>
+<h2 id="八建议自己动手试的-6-行代码">八、建议自己动手试的 6 行代码</h2>
+<pre><code class="language-go">fmt.Println(<span class="hljs-string">&quot;go&quot;</span>, <span class="hljs-number">18</span>)
+fmt.Printf(<span class="hljs-string">&quot;name=%s age=%d\n&quot;</span>, <span class="hljs-string">&quot;tom&quot;</span>, <span class="hljs-number">18</span>)
+fmt.Sprintf(<span class="hljs-string">&quot;stu%02d&quot;</span>, <span class="hljs-number">3</span>)
+fmt.Printf(<span class="hljs-string">&quot;%v\n&quot;</span>, []<span class="hljs-type">int</span>{<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>})
+fmt.Printf(<span class="hljs-string">&quot;%#v\n&quot;</span>, student{ID: <span class="hljs-number">1</span>, Name: <span class="hljs-string">&quot;tom&quot;</span>})
+fmt.Printf(<span class="hljs-string">&quot;%T\n&quot;</span>, <span class="hljs-number">3.14</span>)
+</code></pre>
+<p>把这几行都跑一遍，再对照上面的规则，基本就不会再被 fmt 里的符号绕晕了。</p>
+
+            
+            
+        </body>
+        </html>
